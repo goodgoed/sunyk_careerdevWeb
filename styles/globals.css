@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.headerUp {
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+header {
   min-height: 60vh;
   background-color: rgb(6, 124, 189);
 }
@@ -12,10 +16,10 @@ main {
   background-color: turquoise;
 }
 
-@layer base {
+/* @layer base {
   :root {
     --color-darkcyan: 6 124 179;
     --color-oldrose: 127, 77, 105;
     --color-lightsteelblue: 204, 219, 227;
   }
-}
+} */
