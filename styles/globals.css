@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+header {
+  min-height: 60vh;
+  background-color: pink;
+}
+
+main {
+  min-height: 40vh;
+  background-color: turquoise;
+}
