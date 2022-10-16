@@ -13,10 +13,12 @@ const Card = ({ type, title, rsvp, date }: Props) => {
   const formattedRsvp = format(new Date(rsvp), 'MMM dd');
   const formattedDate = format(new Date(date), 'MMM dd');
 
+  let color;
   let borderColor;
   let textColor;
   if (type.toLowerCase() === 'internship') {
-    borderColor = 'border-red-900';
+    color = 'violet';
+    borderColor = `border-${color}`;
     textColor = 'text-red-900';
   } else if (type.toLowerCase() === 'seminar') {
     borderColor = 'border-blue-900';

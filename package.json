@@ -9,6 +9,7 @@
     "@popperjs/core": "2.9.1",
     "date-fns": "^2.29.3",
     "next": "latest",
+    "next-images": "^1.8.4",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-icons": "^4.6.0"
