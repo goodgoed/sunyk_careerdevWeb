@@ -13,19 +13,17 @@ const Card = ({ type, title, rsvp, date }: Props) => {
   const formattedRsvp = format(new Date(rsvp), 'MMM dd');
   const formattedDate = format(new Date(date), 'MMM dd');
 
-  let color;
   let borderColor;
   let textColor;
   if (type.toLowerCase() === 'internship') {
-    color = 'violet';
-    borderColor = `border-${color}`;
-    textColor = 'text-red-900';
+    borderColor = `border-oldrose`;
+    textColor = `text-oldrose`;
   } else if (type.toLowerCase() === 'seminar') {
-    borderColor = 'border-blue-900';
-    textColor = 'text-blue-900';
+    borderColor = `border-emerald`;
+    textColor = `text-emerald`;
   } else if (type.toLowerCase() === 'contest') {
-    borderColor = 'border-cyan-900';
-    textColor = 'text-cyan-900';
+    borderColor = `border-violet`;
+    textColor = `text-violet`;
   }
 
   return (

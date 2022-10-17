@@ -26,7 +26,7 @@ const Main: React.FC = () => {
 
   return (
     <main className="py-10">
-      <div className="flex justify-center align-middle py-4">
+      <div className="flex justify-center align-middle py-4 pb-14">
         <DropdownComponent
           color="white"
           setType={handleType}
