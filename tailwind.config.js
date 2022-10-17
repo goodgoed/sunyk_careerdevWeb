@@ -7,9 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        darkcyan: 'rgb(var(--color-darkcyan)',
-        lightsteelblue: 'rgb(var(--color-lightsteelblue)',
-        oldrose: 'rgb(var(--color-oldrose)',
+        darkcyan: '#067CBD',
+        lightsteelblue: '#CCDBE3',
+        oldrose: '#894D69',
         emerald: '#10b981',
         violet: '#8b5cf6',
       },
