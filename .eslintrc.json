@@ -42,6 +42,16 @@
       }
     ],
     "arrow-body-style": ["error", "always"],
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "react/jsx-no-bind": "off",
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTernary": true
+      }
+    ],
+    "no-useless-return": "off",
+    "array-callback-return": "warn",
+    "consistent-return": "off"
   }
 }

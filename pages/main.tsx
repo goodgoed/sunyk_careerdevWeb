@@ -1,62 +1,52 @@
-import DropdownComponent from '../components/dropDown';
+import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import Card from '../components/card';
-import React, { useEffect } from 'react';
+import DropdownComponent from '../components/dropDown';
+import { contentType } from '../globals/types';
 import fetchContents from '../lib/contents';
 
 const Main: React.FC = () => {
-  const [option, setOption] = React.useState('All');
+  const [option, setOption] = React.useState({
+    type: 'All',
+  });
 
-  function handleOption(option: string) {
-    setOption(option);
+  function handleType(type: string) {
+    setOption({
+      type,
+    });
   }
 
-  //testing code
+  // testing code
   const [contents, setContents] = React.useState([]);
+
   React.useEffect(() => {
-    setContents(fetchContents());
-  }, []);
+    setContents(fetchContents(option));
+  }, [option]);
 
   return (
     <main className="py-10">
       <div className="flex justify-center align-middle py-4">
         <DropdownComponent
           color="white"
-          setOption={handleOption}
-          option={option}
+          setType={handleType}
+          type={option.type}
         />
       </div>
       <div className="flex justify-center">
-        <div className="w-1/2 flex flex-wrap justify-start align-middle gap-12">
-          <Card
-            type="Internship"
-            title="Career For Auditing"
-            rsvp="2022-10-16"
-            date="2022-10-16"
-          />
-          <Card
-            type="Seminar"
-            title="Career For Auditing"
-            rsvp="2022-10-16"
-            date="2022-10-16"
-          />
-          <Card
-            type="Contest"
-            title="Career For Auditing"
-            rsvp="2022-10-16"
-            date="2022-10-16"
-          />
-          <Card
-            type="Contest"
-            title="Career For Auditing"
-            rsvp="2022-10-16"
-            date="2022-10-16"
-          />
-          <Card
-            type="Contest"
-            title="Career For Auditing"
-            rsvp="2022-10-16"
-            date="2022-10-16"
-          />
+        <div className="w-1/2 flex flex-wrap justify-center align-middle gap-12">
+          {contents[0] &&
+            contents.map((content: contentType) => {
+              return (
+                <Card
+                  key={uuidv4()}
+                  type={content.type}
+                  title={content.title}
+                  rsvp={content.deadline}
+                  date={content.date}
+                />
+              );
+            })}
         </div>
       </div>
     </main>
