@@ -15,11 +15,3 @@ main {
   min-height: 40vh;
   background-color: turquoise;
 }
-
-@layer base {
-  :root {
-    --color-darkcyan: 6 124 179;
-    --color-oldrose: 127, 77, 105;
-    --color-lightsteelblue: 204, 219, 227;
-  }
-}
