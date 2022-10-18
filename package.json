@@ -12,13 +12,15 @@
     "next-images": "^1.8.4",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-icons": "^4.6.0"
+    "react-icons": "^4.6.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^3.3.1",
     "@types/node": "17.0.35",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "autoprefixer": "^10.4.7",

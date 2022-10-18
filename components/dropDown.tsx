@@ -5,11 +5,11 @@ import { AiFillCaretDown } from 'react-icons/ai';
 
 type Props = {
   color: string;
-  option: string;
-  setOption: (option: string) => void;
+  type: string;
+  setType: (type: string) => void;
 };
 
-const Dropdown = ({ color, option, setOption }: Props) => {
+const Dropdown = ({ color, type, setType }: Props) => {
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   // const [option, setOption] = React.useState('All');
@@ -46,7 +46,7 @@ const Dropdown = ({ color, option, setOption }: Props) => {
           }}
         >
           <div className="flex flex-row align-middle justify-center">
-            {option} <AiFillCaretDown className="inline mt-1 ml-2" />
+            {type} <AiFillCaretDown className="inline mt-1 ml-2" />
           </div>
         </button>
         <div
@@ -57,54 +57,58 @@ const Dropdown = ({ color, option, setOption }: Props) => {
           }text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1`}
           style={{ minWidth: '12rem' }}
         >
-          <div
+          <button
+            type="button"
             className={`text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent cursor-pointer${
               color === 'white' ? ' text-slate-700' : 'text-white'
             }`}
             onClick={(e) => {
               e.preventDefault();
               closeDropdownPopover();
-              setOption('All');
+              setType('All');
             }}
           >
             All
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             className={`text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent cursor-pointer${
               color === 'white' ? ' text-slate-700' : 'text-white'
             }`}
             onClick={(e) => {
               e.preventDefault();
               closeDropdownPopover();
-              setOption('Internship');
+              setType('Internship');
             }}
           >
             Internship
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             className={`text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent cursor-pointer${
               color === 'white' ? ' text-slate-700' : 'text-white'
             }`}
             onClick={(e) => {
               e.preventDefault();
               closeDropdownPopover();
-              setOption('Seminar');
+              setType('Seminar');
             }}
           >
             Seminar
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             className={`text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent cursor-pointer${
               color === 'white' ? ' text-slate-700' : 'text-white'
             }`}
             onClick={(e) => {
               e.preventDefault();
               closeDropdownPopover();
-              setOption('Contest');
+              setType('Contest');
             }}
           >
             Contest
-          </div>
+          </button>
         </div>
       </div>
     </div>
