@@ -3,9 +3,23 @@ export type optionType = {
 };
 
 export type contentType = {
+  id: string;
   title: string;
   type: string;
   deadline: string;
   date: string;
+  major: string;
+};
+
+export type docContentType = {
+  id: string;
+  title: string;
+  type: string;
+  deadline: {
+    seconds: number;
+  };
+  date: {
+    seconds: number;
+  };
   major: string;
 };

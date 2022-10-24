@@ -4,7 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["airbnb", "prettier", "plugin:import/react"],
+  "extends": ["airbnb", "prettier", "plugin:import/react", "next"],
   "plugins": ["prettier", "react", "@typescript-eslint"],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -52,6 +52,8 @@
     ],
     "no-useless-return": "off",
     "array-callback-return": "warn",
-    "consistent-return": "off"
+    "consistent-return": "off",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "react/jsx-props-no-spreading": "warn"
   }
 }

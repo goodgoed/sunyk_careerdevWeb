@@ -1,16 +1,18 @@
 import { format } from 'date-fns';
+import Link from 'next/link';
 import React from 'react';
 import { AiFillCaretRight } from 'react-icons/ai';
 
 interface Props {
   type: string;
   title: string;
-  rsvp: string;
+  deadline: string;
   date: string;
+  id: string;
 }
 
-const Card = ({ type, title, rsvp, date }: Props) => {
-  const formattedRsvp = format(new Date(rsvp), 'MMM dd');
+const Card = ({ type, title, deadline, date, id }: Props) => {
+  const formattedRsvp = format(new Date(deadline), 'MMM dd');
   const formattedDate = format(new Date(date), 'MMM dd');
 
   let borderColor;
@@ -39,9 +41,11 @@ const Card = ({ type, title, rsvp, date }: Props) => {
         </div>
       </div>
       <div className="flex justify-end">
-        <a href="/" className="text-xs -mr-1">
-          Detail <AiFillCaretRight className="inline-block" />
-        </a>
+        <Link href={`/contents/${id}`}>
+          <a className="text-xs -mr-1">
+            Detail <AiFillCaretRight className="inline-block" />
+          </a>
+        </Link>
       </div>
     </div>
   );

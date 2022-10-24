@@ -1,15 +1,16 @@
+/* eslint-disable react/destructuring-assignment */
+import Link from 'next/link';
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
-import Card from '../components/card';
-import DropdownComponent from '../components/dropDown';
 import { contentType } from '../globals/types';
-import fetchContents from '../lib/contents';
+import Card from './card';
+import DropdownComponent from './dropDown';
 
-const Main: React.FC = () => {
+const Main: React.FC = (data) => {
   const [option, setOption] = React.useState({
     type: 'All',
   });
+  const [contents, setContents] = React.useState([]);
 
   function handleType(type: string) {
     setOption({
@@ -17,12 +18,15 @@ const Main: React.FC = () => {
     });
   }
 
-  // testing code
-  const [contents, setContents] = React.useState([]);
-
   React.useEffect(() => {
-    setContents(fetchContents(option));
-  }, [option]);
+    setContents(
+      Object.values(data).filter((content: contentType) => {
+        if (option.type.toLowerCase() === 'all') return true;
+
+        return option.type.toLowerCase() === content.type.toLowerCase();
+      })
+    );
+  }, [option.type]);
 
   return (
     <main className="py-10">
@@ -32,6 +36,9 @@ const Main: React.FC = () => {
           setType={handleType}
           type={option.type}
         />
+        <Link href="/add">
+          <a>Add</a>
+        </Link>
       </div>
       <div className="flex justify-center">
         <div className="w-1/2 flex flex-wrap justify-center align-middle gap-12">
@@ -39,10 +46,11 @@ const Main: React.FC = () => {
             contents.map((content: contentType) => {
               return (
                 <Card
-                  key={uuidv4()}
+                  key={content.id}
+                  id={content.id}
                   type={content.type}
                   title={content.title}
-                  rsvp={content.deadline}
+                  deadline={content.deadline}
                   date={content.date}
                 />
               );

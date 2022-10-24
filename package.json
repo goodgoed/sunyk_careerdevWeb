@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start"
   },
@@ -12,6 +12,7 @@
     "next": "latest",
     "next-images": "^1.8.4",
     "react": "18.1.0",
+    "react-calendar": "^3.9.0",
     "react-dom": "18.1.0",
     "react-icons": "^4.6.0",
     "uuid": "^9.0.0"
@@ -27,6 +28,7 @@
     "autoprefixer": "^10.4.7",
     "eslint": "^8.25.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "^12.3.1",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
