@@ -34,7 +34,7 @@ const Dropdown = ({ color, type, setType }: Props) => {
     : (bgColor = `bg-${color}-500`);
   return (
     <div className="flex flex-wrap">
-      <div className="w-full sm:w-6/12 md:w-4/12 px-4">
+      <div className="w-full sm:w-6/12 md:w-4/12 px-4 ml-4">
         <button
           className={`text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 ${bgColor}`}
           type="button"

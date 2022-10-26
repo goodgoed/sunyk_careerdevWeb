@@ -3,7 +3,6 @@ import type { NextPage } from 'next';
 import React from 'react';
 
 import HeaderDown from '../components/headerDown';
-import Headers from '../components/headers';
 import Main from '../components/main';
 import { db } from '../lib/firebase/initFirebase';
 import { dateStripped } from '../lib/helper';
