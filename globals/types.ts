@@ -9,6 +9,7 @@ export type contentType = {
   deadline: string;
   date: string;
   major: string;
+  images: string[];
 };
 
 export type docContentType = {

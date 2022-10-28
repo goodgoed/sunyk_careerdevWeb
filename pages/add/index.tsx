@@ -1,14 +1,23 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { format } from 'date-fns';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, setDoc } from 'firebase/firestore';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { TiDeleteOutline } from 'react-icons/ti';
+import Modal from 'react-modal';
 import Swal from 'sweetalert2';
+import { v4 as uuidv4 } from 'uuid';
 
-import { db } from '../../lib/firebase/initFirebase';
+import { db, storage } from '../../lib/firebase/initFirebase';
 
+Modal.setAppElement('#__next');
 const Add: React.FC = () => {
   const [state, setState] = useState({
     title: '',
@@ -16,42 +25,74 @@ const Add: React.FC = () => {
     deadline: new Date(),
     date: new Date(),
   });
+  const [images, setImages] = useState([]);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const imageRef = useRef();
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal(e) {
+    e.stopPropagation();
+    setIsOpen(false);
+  }
 
   async function handleAdd(e) {
-    const docRef = await addDoc(collection(db, 'contents'), {
-      ...state,
-    });
-    if (docRef) {
-      Swal.fire({
-        title: 'Success',
-        icon: 'success',
-        text: 'Content was successfully added!',
-        confirmButtonText: 'OK',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = '/';
-        }
-      });
-    } else {
-      Swal.fire({
-        title: 'Something went wrong',
-        icon: 'error',
-        text: 'Try Again',
-        confirmButtonText: 'OK',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.reload();
-        }
+    const imgURL = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const image of images) {
+      const imgRef = ref(storage, uuidv4());
+      // eslint-disable-next-line no-await-in-loop
+      await uploadBytes(imgRef, image, 'data_url').then(async (result) => {
+        imgURL.push(await getDownloadURL(result.ref));
       });
     }
+
+    const docRef = await addDoc(collection(db, 'contents'), {
+      ...state,
+      images: imgURL,
+    })
+      .then((res) => {
+        Swal.fire({
+          title: 'Success',
+          icon: 'success',
+          text: 'Content was successfully added!',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = `/contents/${res.id}`;
+          }
+        });
+      })
+      .catch(() => {
+        Swal.fire({
+          title: 'Something went wrong',
+          icon: 'error',
+          text: 'Try Again',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      });
   }
 
   function handleChange(e, name) {
     if ('target' in e) {
-      setState({
-        ...state,
-        [e.target.name]: e.target.value,
-      });
+      if (e.target.files && e.target.files.length > 0) {
+        Object.values(e.target.files).forEach((file) => {
+          setImages((prev) => {
+            return [...prev, file];
+          });
+        });
+      } else {
+        setState({
+          ...state,
+          [e.target.name]: e.target.value,
+        });
+      }
     } else {
       setState({
         ...state,
@@ -60,13 +101,33 @@ const Add: React.FC = () => {
     }
   }
 
+  function handleImageDelete(name) {
+    setImages(
+      images.filter((image) => {
+        return image.name !== name;
+      })
+    );
+  }
+
+  function openPreview(image) {
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onload = function () {
+      imageRef.current.src = reader.result.toString();
+    };
+  }
+
+  useEffect(() => {
+    console.log(images);
+  }, [images]);
+
   return (
-    <div className="h-screen bg-lightsteelblue flex justify-center">
+    <div className="bg-lightsteelblue flex justify-center">
       <div className="w-2/4 px-6 bg-white rounded my-8">
         <div className="flex justify-center flex-col w-3/4 mx-auto pt-10">
           <h1 className="mx-auto font-bold">Add a content</h1>
           <hr className="my-8 h-px bg-lightsteelblue border-0" />
-          <form className="space-y-14">
+          <form>
             <div className="relative z-0 mb-6 w-full group">
               <input
                 type="text"
@@ -90,7 +151,7 @@ const Add: React.FC = () => {
             <select
               name="type"
               id="type"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none block w-full p-2.5"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:outline-none block w-full p-2.5 mb-6"
               value={state.type}
               onChange={(e) => {
                 handleChange(e, 'type');
@@ -109,7 +170,7 @@ const Add: React.FC = () => {
               }}
               dateFormat="MMM dd, yyyy"
               customInput={
-                <div className="relative ">
+                <div className="relative mb-6">
                   <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                     <svg
                       aria-hidden="true"
@@ -143,7 +204,7 @@ const Add: React.FC = () => {
               }}
               dateFormat="MMM dd, yyyy"
               customInput={
-                <div className="relative ">
+                <div className="relative mb-6">
                   <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                     <svg
                       aria-hidden="true"
@@ -169,7 +230,86 @@ const Add: React.FC = () => {
                 </div>
               }
             />
-            <div className="flex ">
+            <div className="flex flex-col justify-center items-center w-full mb-6 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed ">
+              {images[0] ? (
+                <div className="py-4">
+                  <h1 className="font-bold mb-4">Selected</h1>
+                  <div className="flex flex-col">
+                    {images.map((image) => {
+                      return (
+                        <div
+                          key={uuidv4()}
+                          className="flex flex-row align-middle"
+                        >
+                          <p
+                            className="mr-auto text-s cursor-pointer hover:text-darkcyan ease-linear transition-all duration-150"
+                            onClick={() => {
+                              openModal();
+                              openPreview(image);
+                            }}
+                          >
+                            <Modal
+                              isOpen={modalIsOpen}
+                              onRequestClose={closeModal}
+                            >
+                              <img ref={imageRef} alt="" />
+                            </Modal>
+                            {image.name}
+                          </p>
+                          <TiDeleteOutline
+                            className="cursor-pointer ml-3 mt-1"
+                            onClick={() => {
+                              handleImageDelete(image.name);
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <label
+                  htmlFor="dropzone-file"
+                  className="flex flex-col justify-center items-center w-full h-64 cursor-pointer hover:bg-gray-100 "
+                >
+                  <div className="flex flex-col justify-center items-center pt-5 pb-6">
+                    <svg
+                      aria-hidden="true"
+                      className="mb-3 w-10 h-10 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      SVG, PNG, JPG (MAX. 800x400px)
+                    </p>
+                  </div>
+                  <input
+                    id="dropzone-file"
+                    type="file"
+                    className="hidden"
+                    name="images"
+                    multiple
+                    onChange={(e) => {
+                      handleChange(e, 'images');
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+            <div className="flex mb-6">
               <button
                 type="button"
                 className="mx-auto ease-linear transition-all duration-150 ml-auto bg-darkcyan  font-semibold text-white hover:shadow-lg py-2 px-4 border border-darkcyan hover:border-transparent rounded mb-1"
