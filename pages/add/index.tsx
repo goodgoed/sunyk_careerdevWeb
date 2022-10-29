@@ -6,11 +6,13 @@
 import { format } from 'date-fns';
 import { addDoc, collection, setDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { TiDeleteOutline } from 'react-icons/ti';
+import ReactLoading from 'react-loading';
 import Modal from 'react-modal';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +29,8 @@ const Add: React.FC = () => {
   });
   const [images, setImages] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
-  const imageRef = useRef();
+  const [loading, setIsLoading] = useState(false);
+  const [previewURL, setPreviewURL] = useState('');
 
   function openModal() {
     setIsOpen(true);
@@ -36,16 +39,19 @@ const Add: React.FC = () => {
   function closeModal(e) {
     e.stopPropagation();
     setIsOpen(false);
+    setPreviewURL('');
   }
 
   async function handleAdd(e) {
+    setIsLoading(true);
     const imgURL = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const image of images) {
-      const imgRef = ref(storage, uuidv4());
+      const key = uuidv4();
+      const imgRef = ref(storage, key);
       // eslint-disable-next-line no-await-in-loop
       await uploadBytes(imgRef, image, 'data_url').then(async (result) => {
-        imgURL.push(await getDownloadURL(result.ref));
+        imgURL.push({ key, url: await getDownloadURL(result.ref) });
       });
     }
 
@@ -54,6 +60,7 @@ const Add: React.FC = () => {
       images: imgURL,
     })
       .then((res) => {
+        setIsLoading(false);
         Swal.fire({
           title: 'Success',
           icon: 'success',
@@ -113,7 +120,7 @@ const Add: React.FC = () => {
     const reader = new FileReader();
     reader.readAsDataURL(image);
     reader.onload = function () {
-      imageRef.current.src = reader.result.toString();
+      setPreviewURL(reader.result.toString());
     };
   }
 
@@ -252,7 +259,11 @@ const Add: React.FC = () => {
                               isOpen={modalIsOpen}
                               onRequestClose={closeModal}
                             >
-                              <img ref={imageRef} alt="" />
+                              <Image
+                                src={previewURL}
+                                alt="preview image"
+                                layout="fill"
+                              />
                             </Modal>
                             {image.name}
                           </p>
@@ -319,6 +330,32 @@ const Add: React.FC = () => {
               </button>
             </div>
           </form>
+
+          {loading && (
+            <Modal
+              isOpen
+              style={{
+                content: {
+                  posiition: 'relative',
+                  border: 'none',
+                  background: 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  height: '100vh',
+                  inset: '0px',
+                },
+              }}
+            >
+              <ReactLoading
+                type="bubbles"
+                color="#067CBD"
+                height={200}
+                width={200}
+              />
+            </Modal>
+          )}
         </div>
       </div>
     </div>
