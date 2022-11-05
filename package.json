@@ -1,11 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.3",
     "@popperjs/core": "2.9.1",
     "@types/gapi": "^0.0.43",
     "@types/passport": "^1.0.11",
@@ -19,8 +20,13 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "react": "18.1.0",
+    "react-calendar": "^3.9.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "18.1.0",
     "react-icons": "^4.6.0",
+    "react-loading": "^2.0.3",
+    "react-modal": "^3.16.1",
+    "sweetalert2": "^11.6.2",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -34,6 +40,7 @@
     "autoprefixer": "^10.4.7",
     "eslint": "^8.25.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "^12.3.1",
     "eslint-config-node": "^4.1.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
