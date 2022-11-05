@@ -16,7 +16,7 @@ const LogInButton = () => {
             return signOut();
           }}
         >
-          Sign Out
+          Log Out
         </button>
       </>
     );
@@ -29,7 +29,7 @@ const LogInButton = () => {
         return signIn();
       }}
     >
-      Sign in with SBU Account
+      Log in with SBU Account
     </button>
   );
 };
