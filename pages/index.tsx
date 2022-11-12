@@ -2,41 +2,89 @@ import { collection, getDocs } from 'firebase/firestore';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
+import Button from '../components/button';
+import Card from '../components/card';
+import DropdownComponent from '../components/dropDown';
 import HeaderDown from '../components/headerDown';
 import Headers from '../components/headers';
-// import Main from './main';
-import Main from '../components/main';
+import { contentType } from '../globals/types';
 import { db } from '../lib/firebase/initFirebase';
 import { dateStripped } from '../lib/helper';
 import LogInButton, { checkLogIn } from './logInPage';
 
 const Home: NextPage = ({ data }: any) => {
-  if (checkLogIn()) {
-    return (
-      <>
-        <Headers />
-        <div className="headerUp">
-          <HeaderDown />
-          <div className="flex justify-center">
-            <LogInButton />
-          </div>
-        </div>
-        <Main {...data} />
-      </>
-    );
+  const [option, setOption] = React.useState({
+    type: 'All',
+  });
+  const [contents, setContents] = React.useState([]);
+
+  function handleType(type: string) {
+    setOption({
+      type,
+    });
   }
 
-  return (
+  React.useEffect(() => {
+    setContents(
+      Object.values(data).filter((content: contentType) => {
+        if (option.type.toLowerCase() === 'all') return true;
+
+        return option.type.toLowerCase() === content.type.toLowerCase();
+      })
+    );
+  }, [option.type]);
+
+  return checkLogIn() ? (
     <>
       <div className="headerUp">
         <HeaderDown />
-        <div className="flex justify-center">
-          <LogInButton />
-        </div>
       </div>
+      <main className="py-10 flex justify-center">
+        <div className="w-2/4">
+          <div className="flex py-4 pb-14 align-middle">
+            <div className="mr-auto invisible">Hidden</div>
+            <DropdownComponent
+              color="white"
+              setType={handleType}
+              type={option.type}
+            />
+            <LogInButton />
+            <Button type="add">
+              <Link href="/add" passHref>
+                <a>Add</a>
+              </Link>
+            </Button>
+          </div>
+          <div className="flex justify-center">
+            <div className="w-1/2 flex flex-wrap justify-center align-middle gap-12">
+              {contents[0] &&
+                contents.map((content: contentType) => {
+                  return (
+                    <Card
+                      key={content.id}
+                      id={content.id}
+                      type={content.type}
+                      title={content.title}
+                      deadline={content.deadline}
+                      date={content.date}
+                    />
+                  );
+                })}
+            </div>
+          </div>
+        </div>
+      </main>
     </>
+  ) : (
+    <div className="headerUp">
+      <HeaderDown />
+      <div className="flex justify-center">
+        <LogInButton />
+      </div>
+    </div>
   );
 };
 
