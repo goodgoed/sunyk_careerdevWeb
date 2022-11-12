@@ -8,9 +8,12 @@ import {
 } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import Swal from 'sweetalert2';
+import { v4 as uuidv4 } from 'uuid';
 
+import Button from '../../components/button';
 import { contentType } from '../../globals/types';
 import { db, storage } from '../../lib/firebase/initFirebase';
 
@@ -107,22 +110,14 @@ const Detail: React.FC = ({ content }: detailProps) => {
             </div>
 
             <div className="flex space-x-2 mr-auto mb-6">
-              <button
-                type="button"
-                className="ease-linear transition-all duration-150 ml-auto bg-darkcyan  font-semibold text-white hover:shadow-lg py-2 px-4 border border-darkcyan hover:border-transparent rounded"
-                onClick={() => {
-                  window.location.href = `/edit/${content.id}`;
-                }}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="ease-linear transition-all duration-150 ml-auto bg-red-500 font-semibold text-white hover:shadow-lg py-2 px-4 border border-red-500 hover:border-transparent rounded"
-                onClick={handleDelete}
-              >
+              <Button type="edit">
+                <Link href={`/edit/${content.id}`} passHref>
+                  <a>Edit</a>
+                </Link>
+              </Button>
+              <Button type="delete" onClickHandler={handleDelete}>
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         </div>
